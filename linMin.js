@@ -47,48 +47,46 @@ var CSVProcessor = (function(path){
 })(pathToFile);
 
 
-var binarySearch = (function(mutationScorer,tolerance){
+var linMin = (function(mutationScorer,tolerance){
 
 
-	var getSubset = function(arr,n){
-		let result = new Array(n);
-        let len = arr.length;
-        let taken = new Array(len);
-    	if (n > len)
-        	throw new RangeError("getRandom: more elements taken than available");
-    	while (n--) {
-        	var x = Math.floor(Math.random() * len);
-        	result[n] = arr[x in taken ? taken[x] : x];
-        	taken[x] = --len in taken ? taken[len] : len;
-    	}
-    	return result;
+	var getRandomUnmarkedTestCase = function(arr,markers){
+		var newArr = getAllUnmarkedTestCases(arr,markers);
+		return newArr[Math.floor(Math.random() * newArr.length)]
+
 	}
 
-	var binarySearchRunner = function(list_, alpha, maxRR){
-		let low = 0;
-		let high = list_.length -1;
-		let count = 0
-		let arr = list_
-		while (low <= high && count < 3){
-			count = count + 1;
-			let mid = low + Math.ceil((high - low)/2)
-			let subset = getSubset(arr,(high - low) + 1);
-			let m = mutationScorer.getMutationScore(subset)
-			console.log(`${chalk.bgGreen("low = "+ low + " high = "+ high + " mid = "+ mid)} ${chalk.green("Mutation Score = "+m)}   ${chalk.red(subset)} \n`)
-			if (m + alpha < maxRR){
-				low = mid + 1
-				//pick from previous subset
+	var getAllUnmarkedTestCases = function(arr,markers){
+		var newArr = []
+		for (var i = 0 ; i < arr.length ; i++){
+			if (markers[i] === 0){
+				newArr.push(arr[i])
 			}
-			if (m + alpha > maxRR){
-				high = mid -1
-				//pick from current subset
-			}
-			if (m + alpha == maxRR){
-				return subset
-			}
-			arr = subset;
-
 		}
+		return newArr;
+	}
+
+	var linearSearch = function(list_,markers,tolerance,maxRR){
+		let ts = list_;
+		var iter = 1; 
+		while (markers.includes(0)){
+			console.log(`${chalk.bgMagenta("Iteration no. " + iter)}`)
+			console.log(`${chalk.red("TS = "+ ts)}  ${chalk.green("Makrers = " + markers)}`);
+			let testCase = getRandomUnmarkedTestCase(list_,markers);
+			console.log(`${chalk.magenta("Test Case picked = "+ testCase)}`)
+			markers[testCase] = 1;
+			ts = ts.filter(e => e != testCase);
+			console.log(`${chalk.magenta("Score of testset " + ts + " = " + mutationScorer.getMutationScore(ts))}`)
+			if (mutationScorer.getMutationScore(ts) + tolerance < maxRR){
+				ts.push(testCase);
+				console.log("Adding it back");
+			}
+			else{
+				console.log("Not adding back");	
+			}
+			iter++;
+		}
+		return ts;
 	}
 
 	return {
@@ -97,16 +95,18 @@ var binarySearch = (function(mutationScorer,tolerance){
 			for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 				arr.push(i)
 			}
+			var markers = new Array(arr.length).fill(0); //test cases number and their index in arrays are same
 			let maxMutationScore = parseFloat(CSVProcessor.getMutationScore(arr));
 			console.log(`${chalk.bgMagenta("MaxRR = "+ maxMutationScore)}`)
 			console.log(`${chalk.bgMagenta("tolerance = "+ tolerance)}`)
 			console.log(`${chalk.bgMagenta("Total mutants = "+ CSVProcessor.getTotalMutants())}`)
-			console.log(`${chalk.bgMagenta("Test cases = " )} ${chalk.yellow("[ "+arr+" ]")}`)
-			return binarySearchRunner(arr,tolerance,maxMutationScore);
+			console.log(`${chalk.bgMagenta("Test cases = " )} ${chalk.yellow("[ "+arr+" ]")}\n`)
+			return linearSearch(arr,markers,tolerance,maxMutationScore);
 		}
 	};
 })(CSVProcessor,alpha);
 
 
-let reducedSet = binarySearch.start();
+let reducedSet = linMin.start();
+console.log(`\n\n${chalk.bgGreen("reducedSet: ")}`)
 console.log(reducedSet)

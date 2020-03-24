@@ -89,10 +89,6 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 	}
 
 	var _test = function(list,alpha,maxRR){
-		// if (list.indexOf(1) !== -1 && list.indexOf(3) !== -1){
-		// 	return fail;
-		// }
-		// return pass;
 		let ms = parseFloat(mutationScorer.getMutationScore(list));
 		if (ms + alpha >= maxRR){
 			return [fail,ms];
@@ -146,13 +142,11 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 			for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 				arr.push(i)
 			}
-			let maxMutationScore = parseFloat(CSVProcessor.getMutationScore(arr));
+			let maxMutationScore = parseFloat(mutationScorer.getMutationScore(arr));
 			console.log(`${chalk.bgMagenta("MaxRR = "+ maxMutationScore)}`)
 			console.log(`${chalk.bgMagenta("tolerance = "+ tolerance)}`)
 			console.log(`${chalk.bgMagenta("Total mutants = "+ CSVProcessor.getTotalMutants())}`)
 			return ddmin(arr,tolerance,maxMutationScore);
-			//var l = [1,2,3,4]
-			//return ddmin(l,tolerance,100);
 		}
 	};
 })(CSVProcessor,alpha);
