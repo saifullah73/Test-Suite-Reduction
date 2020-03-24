@@ -77,11 +77,9 @@ var binarySearch = (function(mutationScorer,tolerance){
 			console.log(`${chalk.bgGreen("low = "+ low + " high = "+ high + " mid = "+ mid)} ${chalk.green("Mutation Score = "+m)}   ${chalk.red(subset)} \n`)
 			if (m + alpha < maxRR){
 				low = mid + 1
-				//pick from previous subset
 			}
 			if (m + alpha > maxRR){
 				high = mid -1
-				//pick from current subset
 			}
 			if (m + alpha == maxRR){
 				return subset
