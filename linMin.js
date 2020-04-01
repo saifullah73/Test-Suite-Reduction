@@ -1,6 +1,7 @@
 const chalk = require('chalk')
 const fs = require('fs')
 
+var start = new Date().getTime();
 let args = process.argv.slice(2);
 let pathToFile = args[0]
 let alpha = parseFloat(args[1])
@@ -108,5 +109,16 @@ var linMin = (function(mutationScorer,tolerance){
 
 
 let reducedSet = linMin.start();
-console.log(`\n\n${chalk.bgGreen("reducedSet: ")}`)
+var end = new Date().getTime();
+var time = end - start;
+var seconds = Math.floor(time/1000);
+var minutes = Math.floor(seconds/60);
+let arr = [];
+for (let i = 0; i < CSVProcessor.getHeader().length; i++){
+	arr.push(i)
+}
+console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
+console.log(`${chalk.bgMagenta("Mutation Score for originalSet = " + CSVProcessor.getMutationScore(arr) + " %")}`)
+console.log(`${chalk.bgMagenta("Mutation Score for reducedSet = " + CSVProcessor.getMutationScore(reducedSet) + " %")}`)
+console.log(`${chalk.bgMagenta("Reduced set = ")}`)
 console.log(reducedSet)

@@ -1,9 +1,11 @@
 const chalk = require('chalk')
 const fs = require('fs')
 
+var start = new Date().getTime();
 let args = process.argv.slice(2);
 let pathToFile = args[0]
 let alpha = parseFloat(args[1])
+let runs = parseFloat(args[2])
 
 var CSVProcessor = (function(path){
 	let lines = null;
@@ -100,11 +102,45 @@ var binarySearch = (function(mutationScorer,tolerance){
 			console.log(`${chalk.bgMagenta("tolerance = "+ tolerance)}`)
 			console.log(`${chalk.bgMagenta("Total mutants = "+ CSVProcessor.getTotalMutants())}`)
 			console.log(`${chalk.bgMagenta("Test cases = " )} ${chalk.yellow("[ "+arr+" ]")}`)
-			return binarySearchRunner(arr,tolerance,maxMutationScore);
+			let set;
+			let tol = tolerance - 5 ; //for first run, it'll be reset while in loop
+			let flag = true;
+			let a = 0
+			while(a < runs && flag){
+				tol = tol + 5;
+				if (maxMutationScore - tol <= 0){
+					tol = maxMutationScore; //difference is zero, i.e the final run
+					flag = false;
+				}
+				console.log(`${chalk.green("Run : "+ (a+1) + "/"+ runs) } ${chalk.green("tolerance = "+ tol)}`)
+				set = binarySearchRunner(arr,tol,maxMutationScore);
+				if (set != undefined){
+					return set
+				}
+				a++;
+			}
+			return set
 		}
 	};
 })(CSVProcessor,alpha);
 
 
 let reducedSet = binarySearch.start();
+var end = new Date().getTime();
+var time = end - start;
+var seconds = Math.floor(time/1000);
+var minutes = Math.floor(seconds/60);
+let arr = [];
+for (let i = 0; i < CSVProcessor.getHeader().length; i++){
+	arr.push(i)
+}
+console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
+console.log(`${chalk.bgMagenta("Mutation Score for original Set = " + CSVProcessor.getMutationScore(arr) + " %")}`)
+if (reducedSet != undefined){
+	console.log(`${chalk.bgMagenta("Mutation Score for reducedSet = " + CSVProcessor.getMutationScore(reducedSet) + " %")}`)
+}
+else{
+	console.log(`${chalk.bgRed("No set found")}`)	
+}
+console.log(`${chalk.bgMagenta("Reduced set = ")}`)
 console.log(reducedSet)
