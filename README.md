@@ -8,6 +8,5 @@ A set of javascript tools to reduce test suite size via delta debugging,linear s
 `node binaryMin.js <path to csv> <tolerance>`  
 
 ### Delta Debugging
-`node ddMin.js <path to csv> <tolerance>`
-
+`node ddMin.js <path to csv> <tolerance> <number of runs>`
 The tools works on the csv outputs of mutode2
