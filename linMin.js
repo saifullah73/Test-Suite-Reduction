@@ -120,5 +120,4 @@ for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for originalSet = " + CSVProcessor.getMutationScore(arr) + " %")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for reducedSet = " + CSVProcessor.getMutationScore(reducedSet) + " %")}`)
-console.log(`${chalk.bgMagenta("Reduced set = ")}`)
-console.log(reducedSet)
+console.log(`${chalk.bgMagenta("Reduced set = ")}  ${reducedSet}`)

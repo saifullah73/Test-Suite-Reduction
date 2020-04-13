@@ -142,5 +142,4 @@ if (reducedSet != undefined){
 else{
 	console.log(`${chalk.bgRed("No set found")}`)	
 }
-console.log(`${chalk.bgMagenta("Reduced set = ")}`)
-console.log(reducedSet)
+console.log(`${chalk.bgMagenta("Reduced set = ")}   ${reducedSet}`)
