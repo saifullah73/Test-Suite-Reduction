@@ -21,9 +21,9 @@ var CSVProcessor = (function(path){
     lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
     totalmutants = lines.length;
 
-	console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
-	console.log(`${chalk.bgGreen("Header = "+header)}`);
-	console.log(lines);
+	// console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
+	// console.log(`${chalk.bgGreen("Header = "+header)}`);
+	// console.log(lines);
 
 	return{
 		getMutationScore : function(testCaseIndices){
@@ -71,19 +71,19 @@ var linMin = (function(mutationScorer,tolerance){
 		let ts = list_;
 		var iter = 1; 
 		while (markers.includes(0)){
-			console.log(`${chalk.bgMagenta("Iteration no. " + iter)}`)
-			console.log(`${chalk.red("TS = "+ ts)}  ${chalk.green("Makrers = " + markers)}`);
+			// console.log(`${chalk.bgMagenta("Iteration no. " + iter)}`)
+			// console.log(`${chalk.red("TS = "+ ts)}  ${chalk.green("Makrers = " + markers)}`);
 			let testCase = getRandomUnmarkedTestCase(list_,markers);
-			console.log(`${chalk.magenta("Test Case picked = "+ testCase)}`)
+			// console.log(`${chalk.magenta("Test Case picked = "+ testCase)}`)
 			markers[testCase] = 1;
 			ts = ts.filter(e => e != testCase);
-			console.log(`${chalk.magenta("Score of testset " + ts + " = " + mutationScorer.getMutationScore(ts))}`)
+			// console.log(`${chalk.magenta("Score of testset " + ts + " = " + mutationScorer.getMutationScore(ts))}`)
 			if (mutationScorer.getMutationScore(ts) + tolerance < maxRR){
 				ts.push(testCase);
-				console.log("Adding it back");
+				// console.log("Adding it back");
 			}
 			else{
-				console.log("Not adding back");	
+				// console.log("Not adding back");	
 			}
 			iter++;
 		}

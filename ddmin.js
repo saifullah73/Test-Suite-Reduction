@@ -21,9 +21,9 @@ var CSVProcessor = (function(path){
     lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
     totalmutants = lines.length;
 
-	console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
-	console.log(`${chalk.bgGreen("Header = "+header)}`);
-	console.log(lines);
+	// console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
+	// console.log(`${chalk.bgGreen("Header = "+header)}`);
+	// console.log(lines);
 
 	return{
 		getMutationScore : function(testCaseIndices){
@@ -98,21 +98,20 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 	}
 
 	var test = function(list,alpha,maxRR){
-		console.log(`${chalk.red("test("+list+")...")}`);
 		let [outcome,ms] = _test(list,alpha,maxRR);
-		console.log(`${chalk.red("test("+list+") = " + pretty_outcome(outcome)+ " Score = "+ ms)}`);
+		// console.log(`${chalk.red("test("+list+") = " + pretty_outcome(outcome)+ " Score = "+ ms)}`);
 		return outcome;
 	}
 
 	var ddmin = function(list_,alpha,maxRR){
 		let list = list_;
-		console.log(`${chalk.bgGreen("ddmin(" + list + ")...")}`);
+		// console.log(`${chalk.bgGreen("ddmin(" + list + ")...")}`);
 		/* add assertions here*/
 		let n = 2;
 		while (list.length >= 2){
 			let subsets = splitList(list,n);
-			console.log(subsets)
-			console.log(`${chalk.bgRed("ddmin : testing subsets")}`);
+			// console.log(subsets)
+			// console.log(`${chalk.bgRed("ddmin : testing subsets")}`);
 			let some_comp_is_failing = false;
 			for (let i = 0; i < subsets.length; i++){
 				let subList = subsets[i];
@@ -128,12 +127,12 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 				if(n == list.length){
 					break;
 				}
-				console.log(`${chalk.bgBlue("ddmin : increasing granularity")}`);
+				// console.log(`${chalk.bgBlue("ddmin : increasing granularity")}`);
 				n = Math.min(n * 2, list.length);
 			}
 
 		}
-		console.log(`${chalk.bgGreen("ddmin(" + list_ + ") = " + list)}`);
+		// console.log(`${chalk.bgGreen("ddmin(" + list_ + ") = " + list)}`);
 		return list;
 	}
 

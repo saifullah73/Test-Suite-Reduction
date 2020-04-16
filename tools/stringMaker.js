@@ -28,7 +28,9 @@ function getTestCaseNameString(path,string){
 
 function getTestCaseNumbersArray(string){
 	let x = string.trim();
-	return x.split(",")
+	x = x.split(",")
+	console.log(x.length)
+	return x;
 }
 
 function getTestCaseNumberString(string){
