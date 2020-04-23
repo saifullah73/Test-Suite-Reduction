@@ -4,7 +4,10 @@ import sys
 import time
 start_time = time.time()
 path = sys.argv[1]
-num_feats =  int(sys.argv[2])
+if ((len(sys.argv)) > 2):
+    num_feats =  int(sys.argv[2])
+else:
+    exit("Please provide number of test cases to be picked")
 dataset = pd.read_csv(path)
 X = dataset.iloc[:,:-1]
 y = dataset.iloc[:,-1]
