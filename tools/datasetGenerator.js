@@ -2,6 +2,7 @@ const fs = require('fs')
 let args = process.argv.slice(2);
 let pathToFile = args[0]
 
+var flage = false;
 var deleteFileIfExists = function(path){
 	if (fs.existsSync(path)){
 		fs.unlinkSync(path);
@@ -46,6 +47,10 @@ var combinations = function(array){
 	var letLen = Math.pow(2, array.length);
 
 	for (var i = 0; i < letLen ; i++){
+		if (combi.length > 10000){
+			flag = true;
+			break;
+		}
     	temp= [];
     	for (var j=0;j<array.length;j++) {
         	if ((i & Math.pow(2,j))){ 
@@ -108,5 +113,7 @@ for (var i = 0; i < combinations.length ; i++){
 	var score = CSVProcessor.getMutationScore(temp);
 	console.log(combinations[i] +". Mutation Score for "+temp +" = "+score+ "%");
 	output(getString(temp,list.length,score));
-
+}
+if (flag){
+	console.log("Too many combinations possible, restricted to 100000 results")
 }
