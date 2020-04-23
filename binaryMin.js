@@ -76,7 +76,7 @@ var binarySearch = (function(mutationScorer,tolerance){
 			let mid = low + Math.ceil((high - low)/2)
 			let subset = getSubset(arr,Math.ceil(high-low));
 			let m = mutationScorer.getMutationScore(subset)
-			// console.log(`${chalk.bgGreen("low = "+ low + " high = "+ high + " mid = "+ mid)} ${chalk.green("Mutation Score = "+m)}   ${chalk.red(subset)} \n`)
+			console.log(`${chalk.bgGreen("low = "+ low + " high = "+ high + " mid = "+ mid)} ${chalk.green("Mutation Score = "+m)}   ${chalk.red(subset)} \n`)
 			if (m + alpha < maxRR){
 				low = mid + 1
 			}
@@ -112,7 +112,7 @@ var binarySearch = (function(mutationScorer,tolerance){
 					tol = maxMutationScore; //difference is zero, i.e the final run
 					flag = false;
 				}
-				// console.log(`${chalk.green("Run : "+ (a+1) + "/"+ runs) } ${chalk.green("tolerance = "+ tol)}`)
+				console.log(`${chalk.green("Run : "+ (a+1) + "/"+ runs) } ${chalk.green("tolerance = "+ tol)}`)
 				set = binarySearchRunner(arr,tol,maxMutationScore);
 				if (set != undefined){
 					return set

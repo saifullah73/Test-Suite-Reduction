@@ -37,11 +37,15 @@ function doReplacementsForFile(path){
 		// 	testCaseNumber = 37 
 		// }
 		if (splits[i].trim().match(pat1)){
+			console.log("match 1")
+			console.log(splits[i])
 			splits[i] = splits[i].trim().replace(pat1,'it(\'-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;
 		}
 		else if (splits[i].trim().match(pat2)){
+			console.log("match 2")
+			console.log(splits[i])
 			splits[i] = splits[i].trim().replace(pat2,'test(\'-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;	
@@ -52,7 +56,7 @@ function doReplacementsForFile(path){
 	fs.writeFileSync(path, data)	
 }
 
-var testCaseNumber = 0
+var testCaseNumber = 607
 var paths = fromDir(pathToFolder,'.js');
 console.log(paths)
 for (var path of paths){

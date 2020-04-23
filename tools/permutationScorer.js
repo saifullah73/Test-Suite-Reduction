@@ -72,9 +72,11 @@ var permutation = function(array, leftIndex, size) {
 
 var combinations = function(array){
 	var combi = [];
+	for (var i = 0; i <= array.length; i++){
+		combi.push([])
+	}
 	var temp= "";
 	var letLen = Math.pow(2, array.length);
-
 	for (var i = 0; i < letLen ; i++){
     	temp= [];
     	for (var j=0;j<array.length;j++) {
@@ -83,7 +85,7 @@ var combinations = function(array){
         	}
     	}
     	if (temp.length !== 0) {
-        	combi.push(temp);
+        	combi[temp.length].push(temp);
     	}
 	}
 	return combi
@@ -97,7 +99,7 @@ var output = function(str){
 var getRandomIndices = function(totalPicked,maxIndex){
 	var arr = [];
 	while(arr.length < totalPicked){
-    	var r = Math.floor(Math.random() * maxIndex) + 1;
+    	var r = Math.floor(Math.random() * maxIndex);
     		if(arr.indexOf(r) === -1) arr.push(r);
 	}
 	return arr
@@ -109,30 +111,33 @@ let list = CSVProcessor.getTestCases();
 output("Orignal test cases = "+ list);
 combinations = combinations(list);
 output("Combinations = "+combinations.join("||"))
-var indices = []
-if (combinations.length > 10){
-	indices = getRandomIndices(10,combinations.length);
-}
-else{
-	for (var i = 0; i<combinations.length; i++){
-		indices.push(i);
+for (var idc = 1; idc < combinations.length; idc++){
+	output("--------Size = "+idc+"--------")
+	var indices = []
+	if (combinations[idc].length > 10){
+		indices = getRandomIndices(10,combinations[idc].length);
 	}
+	else{
+		for (var i = 0; i<combinations[idc].length; i++){
+			indices.push(i);
+		}
+	}
+	output("Total Combinations found = "+ combinations[idc].length)
+	output("Indices picked = "+indices);
+ 	var scores = []
+ 	for (var i = 0; i < indices.length ; i++){
+ 		var temp = combinations[idc][indices[i]]
+ 		var score = CSVProcessor.getMutationScore(temp);
+ 		scores.push(score);
+ 		output(indices[i] +". Mutation Score for "+temp +" = "+score+ "%");
+ 	}
+	var sum = 0;
+	for( var i = 0; i < scores.length; i++ ){
+		scores[i] = parseFloat(scores[i]);
+	    sum += scores[i]
+	}
+	var avg = sum/scores.length;
+	output("Max mutation Score = "+ Math.max.apply(null,scores)+"%");
+	output("Min mutation Score = "+ Math.min.apply(null,scores)+"%");
+	output("Avg mutation Score = "+ avg+"%");
 }
-output("Total Combinations found = "+ combinations.length)
-output("Indices picked = "+indices);
-var scores = []
-for (var i = 0; i < indices.length ; i++){
-	var temp = combinations[indices[i]]
-	var score = CSVProcessor.getMutationScore(temp);
-	scores.push(score);
-	output(indices[i] +". Mutation Score for "+temp +" = "+score+ "%");
-}
-var sum = 0;
-for( var i = 0; i < scores.length; i++ ){
-	scores[i] = parseFloat(scores[i]);
-    sum += scores[i]
-}
-var avg = sum/scores.length;
-output("Max mutation Score = "+ Math.max.apply(null,scores)+"%");
-output("Min mutation Score = "+ Math.min.apply(null,scores)+"%");
-output("Avg mutation Score = "+ avg+"%");
