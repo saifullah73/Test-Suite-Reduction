@@ -44,6 +44,15 @@ var CSVProcessor = (function(path){
 		},
 		getHeader : function(){
 			return header;
+		},
+		outputCSVHeader: function(){
+			if (!fs.existsSync("binaryMinOutputs.csv")){
+				var header = "DateTime,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+				fs.appendFileSync("binaryMinOutputs.csv",header+"\n",'utf8')
+			}
+		},
+		outputToCSV: function(str){
+			fs.appendFileSync("binaryMinOutputs.csv",str,'utf8')
 		}
 	};
 })(pathToFile);
@@ -93,6 +102,7 @@ var binarySearch = (function(mutationScorer,tolerance){
 
 	return {
 		start: function(){
+			CSVProcessor.outputCSVHeader();
 			let arr = []
 			for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 				arr.push(i)
@@ -119,6 +129,12 @@ var binarySearch = (function(mutationScorer,tolerance){
 				}
 				a++;
 			}
+			var datetime = ""
+			var d = new Date();
+			var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
+			datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
+			var str = datetime+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
+			CSVProcessor.outputToCSV(str)
 			return set
 		}
 	};
@@ -134,12 +150,16 @@ let arr = [];
 for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 	arr.push(i)
 }
+var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+  ","+CSVProcessor.getMutationScore(arr)+",";
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for original Set = " + CSVProcessor.getMutationScore(arr) + " %")}`)
 if (reducedSet != undefined){
 	console.log(`${chalk.bgMagenta("Mutation Score for reducedSet = " + CSVProcessor.getMutationScore(reducedSet) + " %")}`)
+	str += CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
 }
 else{
-	console.log(`${chalk.bgRed("No set found")}`)	
+	console.log(`${chalk.bgRed("No set found")}`)
+	str += "No set found"+","+"N/A"+","+CSVProcessor.getHeader().length+","+"N/A"+"\n";
 }
+CSVProcessor.outputToCSV(str)
 console.log(`${chalk.bgMagenta("Reduced set = ")}   ${reducedSet}`)

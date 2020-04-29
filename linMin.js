@@ -43,6 +43,15 @@ var CSVProcessor = (function(path){
 		},
 		getHeader : function(){
 			return header;
+		},
+		outputCSVHeader: function(){
+			if (!fs.existsSync("linMinOutputs.csv")){
+				var header = "DateTime,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+				fs.appendFileSync("linMinOutputs.csv",header+"\n",'utf8')
+			}
+		},
+		outputToCSV: function(str){
+			fs.appendFileSync("linMinOutputs.csv",str,'utf8')
 		}
 	};
 })(pathToFile);
@@ -92,6 +101,7 @@ var linMin = (function(mutationScorer,tolerance){
 
 	return {
 		start: function(){
+			CSVProcessor.outputCSVHeader();
 			let arr = []
 			for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 				arr.push(i)
@@ -102,6 +112,12 @@ var linMin = (function(mutationScorer,tolerance){
 			console.log(`${chalk.bgMagenta("tolerance = "+ tolerance)}`)
 			console.log(`${chalk.bgMagenta("Total mutants = "+ CSVProcessor.getTotalMutants())}`)
 			console.log(`${chalk.bgMagenta("Test cases = " )} ${chalk.yellow("[ "+arr+" ]")}\n`)
+			var datetime = ""
+			var d = new Date();
+			var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
+			datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
+			var str = datetime+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
+			CSVProcessor.outputToCSV(str)
 			return linearSearch(arr,markers,tolerance,maxMutationScore);
 		}
 	};
@@ -117,7 +133,11 @@ let arr = [];
 for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 	arr.push(i)
 }
+var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+  ","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
+CSVProcessor.outputToCSV(str)
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for originalSet = " + CSVProcessor.getMutationScore(arr) + " %")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for reducedSet = " + CSVProcessor.getMutationScore(reducedSet) + " %")}`)
 console.log(`${chalk.bgMagenta("Reduced set = ")}  ${reducedSet}`)
+console.log(`${chalk.bgMagenta("Reduced set Size :")}    ${reducedSet.length}`)
+console.log(`${chalk.bgMagenta("Original set Size :")}    ${CSVProcessor.getHeader().length}`)

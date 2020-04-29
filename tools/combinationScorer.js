@@ -93,8 +93,39 @@ var combinations = function(array){
 
 var output = function(str){
 	console.log(str);
-	fs.appendFileSync("output.txt",str+"\n",'utf8')
+	fs.appendFileSync("combinationsScorerOutput/output.txt",str+"\n",'utf8')
 }
+
+var outputToDetailCSV = function(subsetSize,string){
+	var filePath = "combinationsScorerOutput/size"+subsetSize+".csv";
+	fs.appendFileSync(filePath,string+"\n",'utf8');
+}
+
+var makeDirectory = function(){
+	if (fs.existsSync("combinationsScorerOutput")){
+		var files = fs.readdirSync("combinationsScorerOutput");
+		for (const file of files) {
+			fs.unlinkSync("combinationsScorerOutput/"+file);
+		}
+	}
+	else{
+		fs.mkdirSync("combinationsScorerOutput",'0777', true);
+	}
+}
+
+var makeCSVHeader = function(subsetSize){
+	var filePath = "combinationsScorerOutput/size"+subsetSize+".csv";
+	deleteFileIfExists(filePath);
+	fs.appendFileSync(filePath,"Indices,Subset,MutationScore"+"\n",'utf8');
+}
+var makeMainCSVHeader = function(){
+	fs.appendFileSync("combinationsScorerOutput/output.csv","Size,TotalCombinations,IndicesPicked,Max,Min,Avg"+"\n",'utf8')
+}
+
+var outputToMainCSV = function(str){
+	fs.appendFileSync("combinationsScorerOutput/output.csv",str+"\n",'utf8')
+}
+
 
 var getRandomIndices = function(totalPicked,maxIndex){
 	var arr = [];
@@ -106,11 +137,13 @@ var getRandomIndices = function(totalPicked,maxIndex){
 }
 
 
-deleteFileIfExists('output.txt')
 let list = CSVProcessor.getTestCases();
-output("Orignal test cases = "+ list);
 combinations = combinations(list);
+makeDirectory();
+makeMainCSVHeader();
+output("Orignal test cases = "+ list);
 output("Combinations = "+combinations.join("||"))
+var mainStr = ""
 for (var idc = 1; idc < combinations.length; idc++){
 	output("--------Size = "+idc+"--------")
 	var indices = []
@@ -124,12 +157,16 @@ for (var idc = 1; idc < combinations.length; idc++){
 	}
 	output("Total Combinations found = "+ combinations[idc].length)
 	output("Indices picked = "+indices);
+
+	makeCSVHeader(idc);
  	var scores = []
  	for (var i = 0; i < indices.length ; i++){
  		var temp = combinations[idc][indices[i]]
  		var score = CSVProcessor.getMutationScore(temp);
  		scores.push(score);
  		output(indices[i] +". Mutation Score for "+temp +" = "+score+ "%");
+ 		var temp2 = temp.join(" ")
+ 		outputToDetailCSV(idc,indices[i]+","+temp2+","+score);
  	}
 	var sum = 0;
 	for( var i = 0; i < scores.length; i++ ){
@@ -140,4 +177,8 @@ for (var idc = 1; idc < combinations.length; idc++){
 	output("Max mutation Score = "+ Math.max.apply(null,scores)+"%");
 	output("Min mutation Score = "+ Math.min.apply(null,scores)+"%");
 	output("Avg mutation Score = "+ avg+"%");
+	mainStr = idc+","+combinations[idc].length+","+indices.join(" ")
+		+","+Math.max.apply(null,scores)
+		+","+Math.min.apply(null,scores)+","+avg;
+	outputToMainCSV(mainStr);
 }

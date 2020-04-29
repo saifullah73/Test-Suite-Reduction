@@ -1,8 +1,11 @@
 const fs = require('fs')
 let args = process.argv.slice(2);
 let pathToFile = args[0]
-
-var flage = false;
+let combinationsToGenerate = parseInt(args[1])
+if (Number.isNaN(combinationsToGenerate) || combinationsToGenerate == undefined){
+	combinationsToGenerate = 100000
+}
+console.log(combinationsToGenerate)
 var deleteFileIfExists = function(path){
 	if (fs.existsSync(path)){
 		fs.unlinkSync(path);
@@ -47,10 +50,6 @@ var combinations = function(array){
 	var letLen = Math.pow(2, array.length);
 
 	for (var i = 0; i < letLen ; i++){
-		if (combi.length > 10000){
-			flag = true;
-			break;
-		}
     	temp= [];
     	for (var j=0;j<array.length;j++) {
         	if ((i & Math.pow(2,j))){ 
@@ -60,6 +59,10 @@ var combinations = function(array){
     	if (temp.length !== 0) {
         	combi.push(temp);
     	}
+    	if (combi.length == combinationsToGenerate){
+			flag = true;
+			break;
+		}
 	}
 	return combi
 }
@@ -102,18 +105,21 @@ var getHeader = function(orgTestCaseSize){
 
 }
 
+var flag = false
 deleteFileIfExists('output.csv')
 let list = CSVProcessor.getTestCases();
 console.log("Orignal test cases = "+ list);
+console.log("Generating combinations...")
 combinations = combinations(list);
 console.log("Total Combinations found = "+ combinations.length)
 output(getHeader(list.length));
+console.log("Writing Combinations...")
 for (var i = 0; i < combinations.length ; i++){
 	var temp = combinations[i]
 	var score = CSVProcessor.getMutationScore(temp);
-	console.log(combinations[i] +". Mutation Score for "+temp +" = "+score+ "%");
+	// console.log(i +". Mutation Score for "+temp +" = "+score+ "%");
 	output(getString(temp,list.length,score));
 }
 if (flag){
-	console.log("Too many combinations possible, restricted to 100000 results")
+	console.log("Too many combinations possible, restricted to "+combinationsToGenerate +" results")
 }
