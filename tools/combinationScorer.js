@@ -1,7 +1,11 @@
 const fs = require('fs')
 let args = process.argv.slice(2);
 let pathToFile = args[0]
+let mode = args[1];
 
+let outputDirectoryName = pathToFile.split("/");
+outputDirectoryName = outputDirectoryName[outputDirectoryName.length-1]
+outputDirectoryName = outputDirectoryName.replace(".csv","-combinationsScorerOutput")
 var deleteFileIfExists = function(path){
 	if (fs.existsSync(path)){
 		fs.unlinkSync(path);
@@ -39,43 +43,12 @@ var CSVProcessor = (function(path){
 })(pathToFile);
 
 
-var swap = function(array, frstElm, scndElm) {
-
-    var temp = array[frstElm];
-    array[frstElm] = array[scndElm];
-    array[scndElm] = temp;
-}
-
-var permutation = function(array, leftIndex, size) {
-
-    var x;
-
-    if(leftIndex === size) {
-
-        temp = "";
-
-        for (var i = 0; i < array.length; i++) {
-            temp += array[i] + " ";
-        }
-
-        console.log("---------------> " + temp);
-
-    } else {
-
-        for(x = leftIndex; x < size; x++) {
-            swap(array, leftIndex, x);
-            permutation(array, leftIndex + 1, size);
-            swap(array, leftIndex, x);
-        }
-    }
-}
 
 var combinations = function(array){
 	var combi = [];
 	for (var i = 0; i <= array.length; i++){
-		combi.push([])
+		combi.push([]);
 	}
-	var temp= "";
 	var letLen = Math.pow(2, array.length);
 	for (var i = 0; i < letLen ; i++){
     	temp= [];
@@ -85,45 +58,75 @@ var combinations = function(array){
         	}
     	}
     	if (temp.length !== 0) {
-        	combi[temp.length].push(temp);
+    		combi[temp.length].push(temp);
     	}
 	}
 	return combi
 }
 
+var limitedCombinations = function(array,limit){
+	var totalTestCases = array.length;
+	var combi = [];
+	for (var i = 0; i <= array.length; i++){
+		combi.push([]);
+	}
+	var arr = []
+	for (var i = 0; i < totalTestCases; i++){
+		arr.push(i);
+	}
+	combi[combi.length-1].push(arr) //inserting manually, the combination of size equal to set size, only one available
+	for (var i = 1; i < combi.length-1 ; i++){
+		while(combi[i].length != limit){
+			indices = getRandomIndices(i,totalTestCases);
+			indices.sort(function(a,b) { return a - b; });
+			let bool = combi[i].some(function(arr) {
+  				return arr.every(function(prop, index) {
+    				return indices[index] === prop
+  				})
+			});
+			if (!bool){
+				combi[i].push(indices)
+			}
+		}
+	}
+	return combi;
+}
+
+
+
 var output = function(str){
 	console.log(str);
-	fs.appendFileSync("combinationsScorerOutput/output.txt",str+"\n",'utf8')
+	fs.appendFileSync(outputDirectoryName+"/output.txt",str+"\n",'utf8')
 }
 
 var outputToDetailCSV = function(subsetSize,string){
-	var filePath = "combinationsScorerOutput/size"+subsetSize+".csv";
+	var filePath = outputDirectoryName+"/size"+subsetSize+".csv";
 	fs.appendFileSync(filePath,string+"\n",'utf8');
 }
 
 var makeDirectory = function(){
-	if (fs.existsSync("combinationsScorerOutput")){
-		var files = fs.readdirSync("combinationsScorerOutput");
+	if (fs.existsSync(outputDirectoryName)){
+		var files = fs.readdirSync(outputDirectoryName);
 		for (const file of files) {
-			fs.unlinkSync("combinationsScorerOutput/"+file);
+			fs.unlinkSync(outputDirectoryName+"/"+file);
 		}
 	}
 	else{
-		fs.mkdirSync("combinationsScorerOutput",'0777', true);
+		fs.mkdirSync(outputDirectoryName,'0777', true);
 	}
 }
 
 var makeCSVHeader = function(subsetSize){
-	var filePath = "combinationsScorerOutput/size"+subsetSize+".csv";
+	var filePath = outputDirectoryName+"/size"+subsetSize+".csv";
 	deleteFileIfExists(filePath);
 	fs.appendFileSync(filePath,"Indices,Subset,MutationScore"+"\n",'utf8');
 }
 var makeMainCSVHeader = function(){
-	fs.appendFileSync("combinationsScorerOutput/output.csv","Size,TotalCombinations,IndicesPicked,Max,Min,Avg"+"\n",'utf8')
+	fs.appendFileSync(outputDirectoryName+"/output.csv","Size,TotalCombinations,IndicesPicked,Max,Min,Avg"+"\n",'utf8')
 }
 
 var outputToMainCSV = function(str){
-	fs.appendFileSync("combinationsScorerOutput/output.csv",str+"\n",'utf8')
+	fs.appendFileSync(outputDirectoryName+"/output.csv",str+"\n",'utf8')
 }
 
 
@@ -136,19 +139,27 @@ var getRandomIndices = function(totalPicked,maxIndex){
 	return arr
 }
 
-
+let upperLimit = 10;
+let limited = false;
+if (mode === "limited"){
+	limited = true;
+}
 let list = CSVProcessor.getTestCases();
-combinations = combinations(list);
+if (limited && list.length>upperLimit){
+	combinations = limitedCombinations(list,upperLimit)
+}
+else{
+	combinations = combinations(list);
+}
 makeDirectory();
 makeMainCSVHeader();
 output("Orignal test cases = "+ list);
-output("Combinations = "+combinations.join("||"))
 var mainStr = ""
 for (var idc = 1; idc < combinations.length; idc++){
 	output("--------Size = "+idc+"--------")
 	var indices = []
-	if (combinations[idc].length > 10){
-		indices = getRandomIndices(10,combinations[idc].length);
+	if (combinations[idc].length > upperLimit && !limited){
+		indices = getRandomIndices(upperLimit,combinations[idc].length);
 	}
 	else{
 		for (var i = 0; i<combinations[idc].length; i++){

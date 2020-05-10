@@ -6,6 +6,10 @@ let args = process.argv.slice(2);
 let pathToFile = args[0]
 let alpha = parseFloat(args[1])
 
+let outputName = pathToFile.split("/");
+outputName = outputName[outputName.length-1]
+outputName = outputName.replace(".csv","");
+
 var CSVProcessor = (function(path){
 	let lines = null;
 	let header = null;
@@ -46,7 +50,7 @@ var CSVProcessor = (function(path){
 		},
 		outputCSVHeader: function(){
 			if (!fs.existsSync("linMinOutputs.csv")){
-				var header = "DateTime,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+				var header = "DateTime,Name,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
 				fs.appendFileSync("linMinOutputs.csv",header+"\n",'utf8')
 			}
 		},
@@ -116,7 +120,7 @@ var linMin = (function(mutationScorer,tolerance){
 			var d = new Date();
 			var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
 			datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
-			var str = datetime+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
+			var str = datetime+","+outputName+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
 			CSVProcessor.outputToCSV(str)
 			return linearSearch(arr,markers,tolerance,maxMutationScore);
 		}
@@ -133,7 +137,7 @@ let arr = [];
 for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 	arr.push(i)
 }
-var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+  ","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
+var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
 CSVProcessor.outputToCSV(str)
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for originalSet = " + CSVProcessor.getMutationScore(arr) + " %")}`)

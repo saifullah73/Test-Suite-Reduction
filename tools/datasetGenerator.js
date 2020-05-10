@@ -1,6 +1,9 @@
 const fs = require('fs')
 let args = process.argv.slice(2);
 let pathToFile = args[0]
+let outputName = pathToFile.split("/");
+outputName = outputName[outputName.length-1]
+outputName = outputName.replace(".csv","-dataset.csv")
 let combinationsToGenerate = parseInt(args[1])
 if (Number.isNaN(combinationsToGenerate) || combinationsToGenerate == undefined){
 	combinationsToGenerate = 100000
@@ -68,7 +71,7 @@ var combinations = function(array){
 }
 
 var output = function(str){
-	fs.appendFileSync("output.csv",str+"\n",'utf8')
+	fs.appendFileSync(outputName,str+"\n",'utf8')
 }
 
 var getRandomIndices = function(totalPicked,maxIndex){
@@ -106,7 +109,7 @@ var getHeader = function(orgTestCaseSize){
 }
 
 var flag = false
-deleteFileIfExists('output.csv')
+deleteFileIfExists(outputName)
 let list = CSVProcessor.getTestCases();
 console.log("Orignal test cases = "+ list);
 console.log("Generating combinations...")

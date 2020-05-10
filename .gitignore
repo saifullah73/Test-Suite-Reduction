@@ -3,6 +3,8 @@ mainTest.csv
 package-lock.json
 info.txt
 tools/combinationsScorerOutput
+tools/*.csv
+tools/uuid-newdataset.
 tools/correlationOutput.csv
 tools/output.csv
 ddMinOutputs.csv

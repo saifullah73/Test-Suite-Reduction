@@ -7,6 +7,10 @@ let pathToFile = args[0]
 let alpha = parseFloat(args[1])
 let runs = parseFloat(args[2])
 
+let outputName = pathToFile.split("/");
+outputName = outputName[outputName.length-1]
+outputName = outputName.replace(".csv","");
+
 var CSVProcessor = (function(path){
 	let lines = null;
 	let header = null;
@@ -47,7 +51,7 @@ var CSVProcessor = (function(path){
 		},
 		outputCSVHeader: function(){
 			if (!fs.existsSync("binaryMinOutputs.csv")){
-				var header = "DateTime,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+				var header = "DateTime,Name,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
 				fs.appendFileSync("binaryMinOutputs.csv",header+"\n",'utf8')
 			}
 		},
@@ -133,7 +137,7 @@ var binarySearch = (function(mutationScorer,tolerance){
 			var d = new Date();
 			var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
 			datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
-			var str = datetime+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
+			var str = datetime+","+outputName+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
 			CSVProcessor.outputToCSV(str)
 			return set
 		}
@@ -150,7 +154,7 @@ let arr = [];
 for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 	arr.push(i)
 }
-var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+  ","+CSVProcessor.getMutationScore(arr)+",";
+var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+ ","+CSVProcessor.getMutationScore(arr)+",";
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for original Set = " + CSVProcessor.getMutationScore(arr) + " %")}`)
 if (reducedSet != undefined){
