@@ -6,8 +6,9 @@ This tools generates a dataset from mutode2 output of a npm package. It will gen
 `node datasetGenerator.js <path to csv output from mutode> {restriction of combinations (integer)}`
 
 ### combinationScorer.js
-Generates all possible combinations of test cases, seperates combinations of same sizes into collections and then for each collection picks randomly at most 10 combinations and returns their maximum, minimum and average mutation score. Generates an combinationScorerOuput folder having detailed outputs in csv files format  
-`node combinationScorer.js <path to csv output from mutode>`  
+Generates all possible combinations of test cases, seperates combinations of same sizes into collections and then for each collection picks randomly at most 10 combinations and returns their maximum, minimum and average mutation score. Generates an combinationScorerOuput folder having detailed outputs in csv files format 
+`node combinationScorer.js <path to csv output from mutode> <mode>`   
+mode can take values "limited" or "full". In limited mode, the tool would generate at max 10 combination of every size possible
 
 ### testRename.js
 This package will rename test cases and append them with their number. Test cases are renamed inplace so backup the test folder before running this script. This script is not genralized to every package,some packages still need a little manual naming, and it does not work in cases where dynamic tests are generated.  
