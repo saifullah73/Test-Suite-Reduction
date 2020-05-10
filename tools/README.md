@@ -2,7 +2,7 @@
 A set of custom developed javascript tools to speed up and assist in reasearch activities  
 ## Descriptions
 ### datasetGenerator.js
-This tools generates a dataset from mutode2 output of a npm package. It will generate all possible combinations of test cases and would insert rows with 0 or 1 at corresponding indices of test case number. 0 indicates a test case is picked and 1 indicates it was dropped for this particular sample. Each row has an output which is the mutation score achieved by the selected test cases. It will generate an output.csv file  
+This tools generates a dataset from mutode2 output of a npm package. It will generate all possible combinations of test cases and would insert rows with 0 or 1 at corresponding indices of test case number. 0 indicates a test case is picked and 1 indicates it was dropped for this particular sample. Each row has an output which is the mutation score achieved by the selected test cases. It will generate an output csv file 
 `node datasetGenerator.js <path to csv output from mutode> {restriction of combinations (integer)}`
 
 ### combinationScorer.js
