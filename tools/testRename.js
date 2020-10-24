@@ -28,7 +28,8 @@ function doReplacementsForFile(path){
 	var data = fs.readFileSync(path, 'utf-8')
 	var splits = data.split('\n')
 	var pat1 = / *it\('/ 
-	var pat2 = / *test\('/
+	var pat3 = / *it\("/
+	var pat2 = / *abctest\('/
 	for (var i = 0; i<splits.length; i++){
 		// if (testCaseNumber === 5){
 		// 	testCaseNumber = 37 
@@ -40,6 +41,13 @@ function doReplacementsForFile(path){
 			console.log("match 1")
 			console.log(splits[i])
 			splits[i] = splits[i].trim().replace(pat1,'it(\'-'+testCaseNumber+'-');
+			console.log(splits[i])
+			testCaseNumber++;
+		}
+		if (splits[i].trim().match(pat3)){
+			console.log("match 3")
+			console.log(splits[i])
+			splits[i] = splits[i].trim().replace(pat3,'it(\"-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;
 		}
@@ -56,7 +64,7 @@ function doReplacementsForFile(path){
 	fs.writeFileSync(path, data)	
 }
 
-var testCaseNumber = 607
+var testCaseNumber = 567 //change this variable, it control where the program should start number test cases from 
 var paths = fromDir(pathToFolder,'.js');
 console.log(paths)
 for (var path of paths){

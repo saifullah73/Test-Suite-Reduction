@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import datetime
 import os.path
+import scipy.stats as stats
 
 if (len(sys.argv) < 3):
     print("Please enter the input required in format")
@@ -85,6 +86,8 @@ def cor_selector(X, y,num_feats):
     # calculate the correlation with y for each feature
     for i in X.columns.tolist():
         cor = np.corrcoef(X[i], y)[0, 1]
+        # cor = stats.pointbiserialr(X[i], y)
+        # print(cor)
         cor_list.append(cor)
     # replace NaN with 0
     cor_list = [0 if np.isnan(i) else i for i in cor_list]
@@ -115,10 +118,7 @@ selected = {}
 for x in range(len(cor_support)):
     if cor_support[x]:
         selected[x] = cor_list[x]
-        if x < num_feats - 1:
-            print(x, end = ",")
-        else:
-            print(x)
+        print(x, end = ",")
 print()
 print("Selected Set Size = ", len(selected))
 print("OriginalSetSize = ", len(cor_support))
