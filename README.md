@@ -6,8 +6,8 @@ The tools works on the csv outputs of mutode2
 `node linMin.js <path to csv> <tolerance>`
 
 ### Binary Reduction
-`node binaryMin.js <path to csv> <tolerance>`  
+`node binaryMin.js <path to csv> <tolerance> <number of runs>`  
 
 ### Delta Debugging
-`node ddMin.js <path to csv> <tolerance> <number of runs>`  
+`node ddMin.js <path to csv> <tolerance>`  
 
