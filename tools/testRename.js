@@ -29,7 +29,7 @@ function doReplacementsForFile(path){
 	var splits = data.split('\n')
 	var pat1 = / *it\('/ 
 	var pat3 = / *it\("/
-	var pat2 = / *abctest\('/
+	var pat2 = / *test\('/
 	for (var i = 0; i<splits.length; i++){
 		// if (testCaseNumber === 5){
 		// 	testCaseNumber = 37 
