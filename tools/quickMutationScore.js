@@ -32,6 +32,7 @@ var CSVProcessor = (function(path){
 		},
 	};
 })(pathToFile);
+
 string = string.split(",")
 arr = []
 for (var s of string){

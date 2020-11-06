@@ -27,34 +27,33 @@ function fromDir(startPath,filter){
 function doReplacementsForFile(path){
 	var data = fs.readFileSync(path, 'utf-8')
 	var splits = data.split('\n')
-	var pat1 = / *it\('/ 
-	var pat3 = / *it\("/
+	var pat1 = /it\('/ 
+	// var pat1 = / *it\('/ 
+	// var pat3 = / *it\("/
+	var pat3 = /it\("/
 	var pat2 = / *test\('/
 	for (var i = 0; i<splits.length; i++){
-		// if (testCaseNumber === 5){
-		// 	testCaseNumber = 37 
-		// }
-		// if (testCaseNumber === ){
-		// 	testCaseNumber = 37 
-		// }
 		if (splits[i].trim().match(pat1)){
 			console.log("match 1")
 			console.log(splits[i])
-			splits[i] = splits[i].trim().replace(pat1,'it(\'-'+testCaseNumber+'-');
+			// splits[i] = splits[i].trim().replace(pat1,'it(\'-'+testCaseNumber+'-');
+			splits[i] = splits[i].replace(pat1,'it(\'-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;
 		}
 		if (splits[i].trim().match(pat3)){
 			console.log("match 3")
 			console.log(splits[i])
-			splits[i] = splits[i].trim().replace(pat3,'it(\"-'+testCaseNumber+'-');
+			// splits[i] = splits[i].trim().replace(pat3,'it(\"-'+testCaseNumber+'-');
+			splits[i] = splits[i].replace(pat3,'it(\"-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;
 		}
 		else if (splits[i].trim().match(pat2)){
 			console.log("match 2")
 			console.log(splits[i])
-			splits[i] = splits[i].trim().replace(pat2,'test(\'-'+testCaseNumber+'-');
+			// splits[i] = splits[i].trim().replace(pat2,'test(\'-'+testCaseNumber+'-');
+			splits[i] = splits[i].replace(pat2,'test(\'-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;	
 		}
@@ -64,7 +63,7 @@ function doReplacementsForFile(path){
 	fs.writeFileSync(path, data)	
 }
 
-var testCaseNumber = 567 //change this variable, it control where the program should start number test cases from 
+var testCaseNumber = 0 //change this variable, it control where the program should start number test cases from 
 var paths = fromDir(pathToFolder,'.js');
 console.log(paths)
 for (var path of paths){
