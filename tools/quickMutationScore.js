@@ -14,6 +14,7 @@ var CSVProcessor = (function(path){
     let linesExceptFirst = templines.slice(1,templines.length-1); //uptil the last item(exclusive) since it is empty string
     totalmutants = linesExceptFirst.length;
     let linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
+    // lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
     lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
     discardedmutants = totalmutants - lines.length;
 

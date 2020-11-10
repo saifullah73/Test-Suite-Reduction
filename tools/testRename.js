@@ -32,6 +32,7 @@ function doReplacementsForFile(path){
 	// var pat3 = / *it\("/
 	var pat3 = /it\("/
 	var pat2 = / *test\('/
+	var pat4 = /it\(`/
 	for (var i = 0; i<splits.length; i++){
 		if (splits[i].trim().match(pat1)){
 			console.log("match 1")
@@ -46,6 +47,14 @@ function doReplacementsForFile(path){
 			console.log(splits[i])
 			// splits[i] = splits[i].trim().replace(pat3,'it(\"-'+testCaseNumber+'-');
 			splits[i] = splits[i].replace(pat3,'it(\"-'+testCaseNumber+'-');
+			console.log(splits[i])
+			testCaseNumber++;
+		}
+		if (splits[i].trim().match(pat4)){
+			console.log("match 4")
+			console.log(splits[i])
+			// splits[i] = splits[i].trim().replace(pat3,'it(\"-'+testCaseNumber+'-');
+			splits[i] = splits[i].replace(pat4,'it(\`-'+testCaseNumber+'-');
 			console.log(splits[i])
 			testCaseNumber++;
 		}
