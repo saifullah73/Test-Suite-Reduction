@@ -9,5 +9,12 @@ The tools works on the csv outputs of mutode2
 `node binaryMin.js <path to csv> <tolerance> <number of runs>`  
 
 ### Delta Debugging
-`node ddMin.js <path to csv> <tolerance>`  
+`node ddMin.js <path to csv> <tolerance>`
 
+### LinMin-ensemble  
+`node linMin-ensemble.js <number of runs to execute> <path to csv> <tolerance>`  
+
+### DDMin-ensemble  
+`node ddMin-ensemble.js <numbers of runs to execute> <path to csv> <tolerance>`  
+Example   
+`node ddMin-ensemble.js 10 experiments/async-new.csv 10`
