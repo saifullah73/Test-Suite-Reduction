@@ -12,9 +12,11 @@ The tools works on the csv outputs of mutode2
 `node ddMin.js <path to csv> <tolerance>`
 
 ### LinMin-ensemble  
+Executes multiple runs of LinMin  
 `node linMin-ensemble.js <number of runs to execute> <path to csv> <tolerance>`  
 
 ### DDMin-ensemble  
+Executes multiple runs of DDMin  
 `node ddMin-ensemble.js <numbers of runs to execute> <path to csv> <tolerance>`  
 Example   
 `node ddMin-ensemble.js 10 experiments/async-new.csv 10`
