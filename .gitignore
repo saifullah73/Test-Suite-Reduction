@@ -1,5 +1,6 @@
 node_modules/
 mainTest.csv
+files/testSelection.csv
 package-lock.json
 info.txt
 tools/combinationsScorerOutput

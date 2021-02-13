@@ -123,6 +123,9 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 		let n = 2;
 		while (list.length >= 2){
 			let subsets = splitList(list,n);
+			// console.log(n)
+			// console.log(subsets)
+			// console.log("----")
 			// console.log(subsets)
 			// console.log(`${chalk.bgRed("ddmin : testing subsets")}`);
 			let some_comp_is_failing = false;
@@ -149,6 +152,21 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 		return list;
 	}
 
+	var shuffle = function(array) {
+		var currentIndex = array.length, temporaryValue, randomIndex;
+		  // While there remain elements to shuffle...
+		  while (0 !== currentIndex) {
+		    // Pick a remaining element...
+				randomIndex = Math.floor(Math.random() * currentIndex);
+		    	currentIndex -= 1;
+		    	// And swap it with the current element.
+		    	temporaryValue = array[currentIndex];
+		    	array[currentIndex] = array[randomIndex];
+		    	array[randomIndex] = temporaryValue;
+		  	}
+	  		return array;
+	}
+
 	return {
 		start: function(){
 			CSVProcessor.outputCSVHeader();
@@ -166,7 +184,8 @@ var deltaDebugging = (function(mutationScorer,tolerance){
 			datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
 			var str = datetime+","+outputName+","+maxMutationScore+","+tolerance+","+CSVProcessor.getTotalMutants()+",";
 			CSVProcessor.outputToCSV(str)
-			return ddmin(arr,tolerance,maxMutationScore);
+			arr = shuffle(arr)
+			return ddmin(arr,tolerance,maxMutationScore).sort();
 		}
 	};
 })(CSVProcessor,alpha);
@@ -181,6 +200,7 @@ let arr = [];
 for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 	arr.push(i)
 }
+CSVProcessor.outputCSVHeader();
 var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
 CSVProcessor.outputToCSV(str)
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
