@@ -114,13 +114,13 @@ var CSVProcessor = (function(path){
 			return header;
 		},
 		outputCSVHeader: function(){
-			if (!fs.existsSync("testSelectionOutputs.csv")){
+			if (!fs.existsSync("testCaseSelectionOutputs.csv")){
 				var header = "DateTime,Name,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
 				fs.appendFileSync("testSelectionOutputs.csv",header+"\n",'utf8')
 			}
 		},
 		outputToCSV: function(str){
-			fs.appendFileSync("testSelectionOutputs.csv",str,'utf8')
+			fs.appendFileSync("testCaseSelectionOutputs.csv",str,'utf8')
 		}
 	};
 })(pathToFile);

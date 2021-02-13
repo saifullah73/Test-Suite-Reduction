@@ -1,3 +1,0 @@
-DateTime,Name,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize
-13 Feb;22h:16min:54sec,tt,20,0m 0s 3ms,100.00,100.00,0 3 6 1 2 4 5,8,7
-13 Feb;22h:17min:36sec,uuid-new,2850,0m 0s 28ms,92.77,92.77,6 4 7 1 8 0 2 3 5,17,9
