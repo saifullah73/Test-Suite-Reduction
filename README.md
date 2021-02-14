@@ -25,12 +25,12 @@ Executes multiple runs of DDMin
 Does a selection of test cases which together kill all of mutants and returns a list of test cases ordered in decreasing manner of most mutants killed by test case (a csv output testCaseSelectionOutputs.csv is also produced)  
 `node testCaseSelection.js <path to csv> <debug>`  
 #### Example  
-For debug Mode, the script will produce a testCaseSelectionDebug.csv output 
-`node testCaseSelection.js uuid-new.csv debug`  
+For debug Mode, the script will produce a testCaseSelectionDebug.csv output   
+`node testCaseSelection.js files/uuid-new.csv debug`    
 For normal mode  
-`node testCaseSelection.js uuid-new.csv`  
+`node testCaseSelection.js files/uuid-new.csv`  
 
 
 ### testCaseSelection-ensemble  
 Executes multiple runs of testCaseSelection  
-`node testCaseSelection-ensemble <numbers of runs to execute> <path to csv>`  
+`node testCaseSelection-ensemble.js <numbers of runs to execute> <path to csv>`  
