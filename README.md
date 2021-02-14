@@ -18,9 +18,19 @@ Executes multiple runs of LinMin
 ### DDMin-ensemble  
 Executes multiple runs of DDMin  
 `node ddMin-ensemble.js <numbers of runs to execute> <path to csv> <tolerance>`  
-Example   
+#### Example   
 `node ddMin-ensemble.js 10 experiments/async-new.csv 10`  
 
 ### testCaseSelection  
-Does a selection of test cases which together kill all of mutants and returns a list of test cases ordered in decreasing manner of most mutants killed by test case  
-`node testCaseSelection.js <path to csv>`  
+Does a selection of test cases which together kill all of mutants and returns a list of test cases ordered in decreasing manner of most mutants killed by test case (a csv output testCaseSelectionOutputs.csv is also produced)  
+`node testCaseSelection.js <path to csv> <debug>`  
+#### Example  
+For debug Mode, the script will produce a testCaseSelectionDebug.csv output 
+`node testCaseSelection.js uuid-new.csv debug`  
+For normal mode  
+`node testCaseSelection.js uuid-new.csv`  
+
+
+### testCaseSelection-ensemble  
+Executes multiple runs of testCaseSelection  
+`node testCaseSelection-ensemble <numbers of runs to execute> <path to csv>`  
