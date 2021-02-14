@@ -12,3 +12,4 @@ ddMinOutputs.csv
 linMinOutputs.csv
 binaryMinOutputs.csv
 testCaseSelectionOutputs.csv
+testCaseSelectionDebug.csv

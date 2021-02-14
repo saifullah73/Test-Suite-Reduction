@@ -4,6 +4,9 @@ const fs = require('fs')
 var start = new Date().getTime();
 let args = process.argv.slice(2);
 let pathToFile = args[0]
+let debug = false
+if (args[1] === 'debug')
+	debug = true
 
 let outputName = pathToFile.split("/");
 outputName = outputName[outputName.length-1]
@@ -22,13 +25,24 @@ var CSVProcessor = (function(path){
 
     let linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
     
-    // lines = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
+    lines = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
 
     lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
     
     
     totalmutants = lines.length;
     totalTestCases = lines[0].length;
+
+    if (debug){
+		var debugHeader = "iter,"
+		let i = 0;
+		while (i < totalTestCases){
+			debugHeader += "TestCase "+i+" Kills,"
+			i++;
+		}
+		debugHeader+="Selected TestCase"
+		fs.writeFileSync("testCaseSelectionDebug.csv",debugHeader+"\n",'utf8')
+    }
 
 	// console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
 	// console.log(`${chalk.bgGreen("Header = "+header)}`);
@@ -49,9 +63,20 @@ var CSVProcessor = (function(path){
 			// console.log(mutantsKilledByTestCase);
 			sum = mutantsKilledByTestCase.reduce((a, b) => a + b, 0)
 			if (sum == 0 ){
-				return null
+				debugStr = null
+				if (debug){
+					debugStr = mutantsKilledByTestCase + "," + null
+				}
+				return [null,debugStr]
 			}
-			return testCaseWithMostKills = mutantsKilledByTestCase.indexOf(Math.max(...mutantsKilledByTestCase));
+			else{
+				testCaseWithMostKills = mutantsKilledByTestCase.indexOf(Math.max(...mutantsKilledByTestCase));
+				debugStr = null
+				if (debug){
+					debugStr = mutantsKilledByTestCase + "," + testCaseWithMostKills
+				}
+				return [testCaseWithMostKills,debugStr] 
+			}
 	}
 
 	var filterMutants = function(testCaseIndex,linesArr){
@@ -63,19 +88,25 @@ var CSVProcessor = (function(path){
 				}
 			return newLinesArr
 		}
+	var debugOutput = function(iter,debugStr){
+		let str = iter + "," + debugStr + "\n"
+		fs.appendFileSync("testCaseSelectionDebug.csv",str,'utf8')
+	}
 	return{
 		performSelection: function(){
 			let seletedSet = [];
 			let testCaseIndices = [];
-			i = 0;
+			let i = 0;
 			while (i < totalTestCases){
 				testCaseIndices.push(i);
 				i++;
 			}
 			let linesArr = lines
-			// console.log("Loop-----------")
+			let testCaseWithMostKills = null
+			let debugStr = null
+			let iter = 0
 			while (linesArr.length > 0){
-				testCaseWithMostKills = findTestCaseWithMostKills(linesArr,testCaseIndices);
+				[testCaseWithMostKills,debugStr] = findTestCaseWithMostKills(linesArr,testCaseIndices);
 				// console.log("Test Case With Most Kills = "+ testCaseWithMostKills);
 				if (testCaseWithMostKills === null)
 					break
@@ -88,9 +119,13 @@ var CSVProcessor = (function(path){
 					testCaseIndices.splice(index, 1);
 					seletedSet.push(testCaseWithMostKills);
 					linesArr = filterMutants(testCaseWithMostKills,linesArr);
+					if (debug){
+						debugOutput(iter,debugStr);
+					}
 				}
 				// console.log("Selected Set = "+ seletedSet);
 				// console.log(linesArr);
+				iter++;
 			}
 			return seletedSet
 
@@ -115,8 +150,8 @@ var CSVProcessor = (function(path){
 		},
 		outputCSVHeader: function(){
 			if (!fs.existsSync("testCaseSelectionOutputs.csv")){
-				var header = "DateTime,Name,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
-				fs.appendFileSync("testSelectionOutputs.csv",header+"\n",'utf8')
+				var header = "DateTime,Name,TotalMutants,ExecutionTime(ms),ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+				fs.appendFileSync("testCaseSelectionOutputs.csv",header+"\n",'utf8')
 			}
 		},
 		outputToCSV: function(str){
@@ -140,7 +175,7 @@ var datetime = ""
 var d = new Date();
 var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
 datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
-var str = datetime+","+outputName+","+CSVProcessor.getTotalMutants()+","+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
+var str = datetime+","+outputName+","+CSVProcessor.getTotalMutants()+","+time+"ms"+","+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
 CSVProcessor.outputToCSV(str)
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for originalSet = " + CSVProcessor.getMutationScore(arr) + " %")}`)
