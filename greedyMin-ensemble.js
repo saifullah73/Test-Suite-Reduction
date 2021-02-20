@@ -26,7 +26,7 @@ function convertToMs(time){
 }
 
 function runScript(pathToFile,callback) {
-    const output = execFileSync("node",["testCaseSelection.js",pathToFile])
+    const output = execFileSync("node",["greedyMin.js",pathToFile])
     console.log(output.toString())
     lines = output.toString().split("\n");
     for (let line of lines){

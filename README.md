@@ -21,16 +21,16 @@ Executes multiple runs of DDMin
 #### Example   
 `node ddMin-ensemble.js 10 experiments/async-new.csv 10`  
 
-### testCaseSelection  
-Does a selection of test cases which together kill all of mutants and returns a list of test cases ordered in decreasing manner of most mutants killed by test case (a csv output testCaseSelectionOutputs.csv is also produced)  
-`node testCaseSelection.js <path to csv> <debug>`  
+### Greedy Selection  
+Does a selection of test cases which together kill all of mutants and returns a list of test cases ordered in decreasing manner of most mutants killed by test case (a csv output greedyMinOutputs.csv is also produced)  
+`node greedyMin.js <path to csv> <debug>`  
 #### Example  
-For debug Mode, the script will produce a testCaseSelectionDebug.csv output   
-`node testCaseSelection.js files/uuid-new.csv debug`    
+For debug Mode, the script will produce a greedyMinDebug.csv output   
+`node greedyMin.js files/uuid-new.csv debug`    
 For normal mode  
-`node testCaseSelection.js files/uuid-new.csv`  
+`node greedyMin.js files/uuid-new.csv`  
 
 
-### testCaseSelection-ensemble  
-Executes multiple runs of testCaseSelection  
-`node testCaseSelection-ensemble.js <numbers of runs to execute> <path to csv>`  
+### GreedyMin-ensemble  
+Executes multiple runs of greedyMin  
+`node greedyMin-ensemble.js <numbers of runs to execute> <path to csv>`  

@@ -11,5 +11,5 @@ tools/output.csv
 ddMinOutputs.csv
 linMinOutputs.csv
 binaryMinOutputs.csv
-testCaseSelectionOutputs.csv
-testCaseSelectionDebug.csv
+greedyMinOutputs.csv
+greedyMinDebug.csv

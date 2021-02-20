@@ -41,7 +41,7 @@ var CSVProcessor = (function(path){
 			i++;
 		}
 		debugHeader+="Selected TestCase"
-		fs.writeFileSync("testCaseSelectionDebug.csv",debugHeader+"\n",'utf8')
+		fs.writeFileSync("greedyMinDebug.csv",debugHeader+"\n",'utf8')
     }
 
 	// console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
@@ -57,7 +57,6 @@ var CSVProcessor = (function(path){
 						mutantsKilledByTestCase[idx] += 1
 					}
 				}
-				idx++;
 			}
 			// console.log("Killed=")
 			// console.log(mutantsKilledByTestCase);
@@ -70,7 +69,25 @@ var CSVProcessor = (function(path){
 				return [null,debugStr]
 			}
 			else{
-				testCaseWithMostKills = mutantsKilledByTestCase.indexOf(Math.max(...mutantsKilledByTestCase));
+				let testCaseWithMostKills = null
+				tiedkills = []
+				maxKills = Math.max(...mutantsKilledByTestCase)
+				let x = 0
+				while (x < mutantsKilledByTestCase.length){
+					if (mutantsKilledByTestCase[x] == maxKills)
+						tiedkills.push(x)
+					x++;
+				}
+				// console.log("Tied Kills...")
+				// console.log(tiedkills)
+				if (tiedkills.length > 1){
+					testCaseWithMostKills = tiedkills[Math.floor(Math.random() * tiedkills.length)];
+				}
+				else{
+					testCaseWithMostKills = tiedkills[0]
+				}
+				// console.log(testCaseWithMostKills)
+				// testCaseWithMostKills = mutantsKilledByTestCase.indexOf(Math.max(...mutantsKilledByTestCase));
 				debugStr = null
 				if (debug){
 					debugStr = mutantsKilledByTestCase + "," + testCaseWithMostKills
@@ -90,7 +107,7 @@ var CSVProcessor = (function(path){
 		}
 	var debugOutput = function(iter,debugStr){
 		let str = iter + "," + debugStr + "\n"
-		fs.appendFileSync("testCaseSelectionDebug.csv",str,'utf8')
+		fs.appendFileSync("greedyMinDebug.csv",str,'utf8')
 	}
 	return{
 		performSelection: function(){
@@ -149,13 +166,13 @@ var CSVProcessor = (function(path){
 			return header;
 		},
 		outputCSVHeader: function(){
-			if (!fs.existsSync("testCaseSelectionOutputs.csv")){
+			if (!fs.existsSync("greedyMinOutputs.csv")){
 				var header = "DateTime,Name,TotalMutants,ExecutionTime(ms),ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
-				fs.appendFileSync("testCaseSelectionOutputs.csv",header+"\n",'utf8')
+				fs.appendFileSync("greedyMinOutputs.csv",header+"\n",'utf8')
 			}
 		},
 		outputToCSV: function(str){
-			fs.appendFileSync("testCaseSelectionOutputs.csv",str,'utf8')
+			fs.appendFileSync("greedyMinOutputs.csv",str,'utf8')
 		}
 	};
 })(pathToFile);

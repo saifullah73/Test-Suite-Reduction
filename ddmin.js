@@ -50,7 +50,7 @@ var CSVProcessor = (function(path){
 		},
 		outputCSVHeader: function(){
 			if (!fs.existsSync("ddMinOutputs.csv")){
-				var header = "DateTime,Name,MaxRR,tolerance,TotalMutants,ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+				var header = "DateTime,Name,MaxRR,tolerance,TotalMutants,ExecutionTime(ms),ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
 				fs.appendFileSync("ddMinOutputs.csv",header+"\n",'utf8')
 			}
 		},
@@ -201,7 +201,7 @@ for (let i = 0; i < CSVProcessor.getHeader().length; i++){
 	arr.push(i)
 }
 CSVProcessor.outputCSVHeader();
-var str = minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
+var str = time+"ms"+","+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+CSVProcessor.getMutationScore(arr)+","+CSVProcessor.getMutationScore(reducedSet)+","+reducedSet.join(" ")+","+CSVProcessor.getHeader().length+","+reducedSet.length+"\n";
 CSVProcessor.outputToCSV(str)
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for originalSet = " + CSVProcessor.getMutationScore(arr) + " %")}`)
