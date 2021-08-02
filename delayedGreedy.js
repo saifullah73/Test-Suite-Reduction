@@ -1,8 +1,11 @@
 const chalk = require('chalk')
-const fs = require('fs')
+const fs = require('fs');
 
 //Reading the file
-let data = fs.readFileSync("./files/express-old.csv",'utf8');
+let args = process.argv.slice(2);
+var path = args[0]
+path = "./files/" + path
+let data = fs.readFileSync(path,'utf8');
 var lines = data.split("\n")
 
 
@@ -35,7 +38,17 @@ function getMutantContext(lines){
 
 }
 
+function getTestCases(line){
+    var cases = line.split("|")
+    var testCases = []
 
+    for (var i = 2;i < cases.length;i++){
+        var test = parseInt(cases[i].split("-")[0])
+        testCases.push(test)
+    }
+    return testCases
+
+}
 
 
 //Returns a mapping from the test cases to the mutants detected by each of the test cases
@@ -244,8 +257,8 @@ function takeGreedyStep(testToMutant){
 
 var optimizedSuite = []
 var testLine = lines[0]
+
 var mutantToTest = getMutantContext(lines);
-var testCases = getTestCases(testLine)
 var testToMutant = getTestCaseContext(lines);
 
 
