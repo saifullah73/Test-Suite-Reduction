@@ -4,7 +4,6 @@ const fs = require('fs');
 //Reading the file
 let args = process.argv.slice(2);
 var path = args[0]
-path = "./files/" + path
 let data = fs.readFileSync(path,'utf8');
 var lines = data.split("\n")
 
@@ -256,7 +255,6 @@ function takeGreedyStep(testToMutant){
 
 
 var optimizedSuite = []
-var testLine = lines[0]
 
 var mutantToTest = getMutantContext(lines);
 var testToMutant = getTestCaseContext(lines);
