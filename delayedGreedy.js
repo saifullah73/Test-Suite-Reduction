@@ -37,6 +37,8 @@ function getMutantContext(lines){
 
 }
 
+
+
 function getTestCases(line){
     var cases = line.split("|")
     var testCases = []
@@ -250,7 +252,26 @@ function takeGreedyStep(testToMutant){
 
 }
 
+function getKilledMutants(testCases,lines){
+    var mutantToTest = getMutantContext(lines)
+    var killed = 0
+    for(var mutant in mutantToTest){
+        for (var test of testCases){
 
+            if(mutantToTest[mutant].includes(test)){
+                killed += 1
+                break;
+            }       
+        }      
+    }
+    return killed;
+    
+}
+
+function getMutationScore(killed ,total){
+    var score = (killed/total)*100
+    return score
+}
 
 
 
@@ -258,10 +279,26 @@ var optimizedSuite = []
 
 var mutantToTest = getMutantContext(lines);
 var testToMutant = getTestCaseContext(lines);
+var testCases = getTestCases(lines[0])
+
+
+
+
+header = lines.slice(0,1)[0].split('|').splice(2);
+let linesExceptFirst = lines.slice(1,lines.length-1); //uptil the last item(exclusive) since it is empty string
+let linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
+linesReduced = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
+linesReduced = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
+totalMutants = linesReduced.length
+
+
+var killedMutants  = getKilledMutants(testCases,lines)
+var mutationScore = getMutationScore(killedMutants, totalMutants)
+
 
 
 console.log("Number of test cases in the original test suite: ",testToMutant.length)
-
+console.log("Mutation score of original test suite: ",mutationScore)
 
 //------Running Delayed Greedy Algorithm-------//
 
@@ -281,6 +318,9 @@ while(isNonEmpty(testToMutant)){
 }
 
 console.log("Number of test cases in the optimal test suite: ", optimizedSuite.length)
+killedMutants  = getKilledMutants(optimizedSuite,lines)
+var opMutationScore = getMutationScore(killedMutants, totalMutants)
+console.log("Mutation score of the reduced test suite: ", opMutationScore)
 
 
 
