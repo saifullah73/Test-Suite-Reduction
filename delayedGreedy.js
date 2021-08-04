@@ -6,6 +6,7 @@ let args = process.argv.slice(2);
 var path = args[0]
 let data = fs.readFileSync(path,'utf8');
 var lines = data.split("\n")
+var start = new Date().getTime();
 
 
 
@@ -296,9 +297,7 @@ var killedMutants  = getKilledMutants(testCases,lines)
 var mutationScore = getMutationScore(killedMutants, totalMutants)
 
 
-
-console.log("Number of test cases in the original test suite: ",testToMutant.length)
-console.log("Mutation score of original test suite: ",mutationScore)
+console.log(`${chalk.bgMagenta("Mutation Score for originalSet: ",mutationScore)}`)
 
 //------Running Delayed Greedy Algorithm-------//
 
@@ -317,10 +316,21 @@ while(isNonEmpty(testToMutant)){
     testToMutant = takeGreedyStep(testToMutant)
 }
 
-console.log("Number of test cases in the optimal test suite: ", optimizedSuite.length)
+var end = new Date().getTime();
+var time = end - start;
+var seconds = Math.floor(time/1000);
+var minutes = Math.floor(seconds/60);
+console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
+
 killedMutants  = getKilledMutants(optimizedSuite,lines)
 var opMutationScore = getMutationScore(killedMutants, totalMutants)
-console.log("Mutation score of the reduced test suite: ", opMutationScore)
+console.log(`${chalk.bgMagenta("Mutation Score for reducedSet: ", opMutationScore)}`)
+console.log("Reduced set: ",optimizedSuite)
+
+console.log(`${chalk.bgMagenta("Reduced set Size: ", optimizedSuite.length)}`)
+console.log(`${chalk.bgMagenta("Original set Size: ",testToMutant.length)}`)
+
+
 
 
 
