@@ -297,7 +297,7 @@ var killedMutants  = getKilledMutants(testCases,lines)
 var mutationScore = getMutationScore(killedMutants, totalMutants)
 
 
-console.log(`${chalk.bgMagenta("Mutation Score for originalSet: ",mutationScore)}`)
+
 
 //------Running Delayed Greedy Algorithm-------//
 
@@ -324,8 +324,9 @@ console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minute
 
 killedMutants  = getKilledMutants(optimizedSuite,lines)
 var opMutationScore = getMutationScore(killedMutants, totalMutants)
-console.log(`${chalk.bgMagenta("Mutation Score for reducedSet: ", opMutationScore)}`)
-console.log("Reduced set: ",optimizedSuite)
+console.log(`${chalk.bgMagenta("Mutation Score for originalSet= ",mutationScore," %")}`)
+console.log(`${chalk.bgMagenta("Mutation Score for reducedSet= ", opMutationScore," %")}`)
+console.log(`${chalk.bgMagenta("Reduced set :")}    ${optimizedSuite}`)
 
 console.log(`${chalk.bgMagenta("Reduced set Size: ", optimizedSuite.length)}`)
 console.log(`${chalk.bgMagenta("Original set Size: ",testToMutant.length)}`)

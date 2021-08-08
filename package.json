@@ -21,6 +21,7 @@
   "homepage": "https://github.com/fatimacodes2001/Test-Suite-Reduction#readme",
   "dependencies": {
     "chalk": "^4.1.2",
+    "child_process": "^1.0.2",
     "fs": "0.0.1-security"
   }
 }
