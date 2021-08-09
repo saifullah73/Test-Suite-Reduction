@@ -2,13 +2,26 @@ const chalk = require('chalk')
 const fs = require('fs');
 
 //Reading the file
-let args = process.argv.slice(2);
+var args = process.argv.slice(2);
 var path = args[0]
-let data = fs.readFileSync(path,'utf8');
+var data = fs.readFileSync(path,'utf8');
 var lines = data.split("\n")
 var start = new Date().getTime();
+var fileName = args[0].split('/')
+fileName = fileName[fileName.length - 1]
+fileName = fileName.replace(".csv","");
 
 
+function createOutput(){
+    if (!fs.existsSync("delayedGreedyOutputs.csv")){
+        var header = "DateTime,Name,TotalMutants,ExecutionTime(ms),ExecutionTime,MutationScoreOriginal,MutationScoreReduced,ReducedSet,OriginalSetSize,ReducedSetSize"
+        fs.appendFileSync("delayedGreedyOutputs.csv",header+"\n",'utf8')
+    }
+}
+
+function outputToCSV(str){
+    fs.appendFileSync("delayedGreedyOutputs.csv",str,'utf8')
+}
 
 //Returns a mapping from mutants to the test cases that detect each of the mutants
 function getMutantContext(lines){
@@ -285,9 +298,9 @@ var testCases = getTestCases(lines[0])
 
 
 
-header = lines.slice(0,1)[0].split('|').splice(2);
-let linesExceptFirst = lines.slice(1,lines.length-1); //uptil the last item(exclusive) since it is empty string
-let linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
+var header = lines.slice(0,1)[0].split('|').splice(2);
+var linesExceptFirst = lines.slice(1,lines.length-1); //uptil the last item(exclusive) since it is empty string
+var linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
 linesReduced = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
 linesReduced = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
 totalMutants = linesReduced.length
@@ -320,6 +333,11 @@ var end = new Date().getTime();
 var time = end - start;
 var seconds = Math.floor(time/1000);
 var minutes = Math.floor(seconds/60);
+
+var datetime = ""
+var d = new Date();
+var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"]
+datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 
 killedMutants  = getKilledMutants(optimizedSuite,lines)
@@ -331,7 +349,10 @@ console.log(`${chalk.bgMagenta("Reduced set :")}    ${optimizedSuite}`)
 console.log(`${chalk.bgMagenta("Reduced set Size: ", optimizedSuite.length)}`)
 console.log(`${chalk.bgMagenta("Original set Size: ",testToMutant.length)}`)
 
+var str = datetime+","+fileName+","+totalMutants+","+time+"ms"+","+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+mutationScore+","+opMutationScore+","+optimizedSuite.join(" ")+","+header.length+","+optimizedSuite.length+"\n";
 
+createOutput()
+outputToCSV(str)
 
 
 
