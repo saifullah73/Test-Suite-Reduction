@@ -44,6 +44,7 @@ function getMutantContext(lines){
                  mutantToTest[outputs[0]].push(j-2)
 
                 }
+                
              }
              
         }
@@ -266,26 +267,22 @@ function takeGreedyStep(testToMutant){
 
 }
 
-function getKilledMutants(testCases,lines){
-    var mutantToTest = getMutantContext(lines)
-    var killed = 0
-    for(var mutant in mutantToTest){
-        for (var test of testCases){
 
-            if(mutantToTest[mutant].includes(test)){
-                killed += 1
-                break;
-            }       
-        }      
-    }
-    return killed;
-    
+
+function getMutationScore(testCases,lines,totalMutants){
+    let killedMutants = 0;
+			for (let line of lines){
+				for (let idx of testCases){
+					if (line[idx] === '0'){
+						killedMutants += 1
+						break;
+					}
+				}
+			}
+			return ((killedMutants/totalMutants)*100).toFixed(2);
 }
 
-function getMutationScore(killed ,total){
-    var score = (killed/total)*100
-    return score
-}
+
 
 
 
@@ -297,7 +294,6 @@ var testCases = getTestCases(lines[0])
 
 
 
-
 var header = lines.slice(0,1)[0].split('|').splice(2);
 var linesExceptFirst = lines.slice(1,lines.length-1); //uptil the last item(exclusive) since it is empty string
 var linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
@@ -306,8 +302,7 @@ linesReduced = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('
 totalMutants = linesReduced.length
 
 
-var killedMutants  = getKilledMutants(testCases,lines)
-var mutationScore = getMutationScore(killedMutants, totalMutants)
+var mutationScore = getMutationScore(testCases, linesReduced,totalMutants)
 
 
 
@@ -340,8 +335,7 @@ var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov
 datetime = d.getDate()+" "+months[d.getMonth()]+";"+d.getHours()+"h:"+d.getMinutes()+"min:"+d.getSeconds()+"sec";
 console.log(`${chalk.bgMagenta("Execution Time = "+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms")}`)
 
-killedMutants  = getKilledMutants(optimizedSuite,lines)
-var opMutationScore = getMutationScore(killedMutants, totalMutants)
+var opMutationScore = getMutationScore(optimizedSuite, linesReduced,totalMutants)
 console.log(`${chalk.bgMagenta("Mutation Score for originalSet= ",mutationScore," %")}`)
 console.log(`${chalk.bgMagenta("Mutation Score for reducedSet= ", opMutationScore," %")}`)
 console.log(`${chalk.bgMagenta("Reduced set :")}    ${optimizedSuite}`)
