@@ -38,6 +38,6 @@ Does a selection of test cases which together kill all of mutants and returns a 
 `node delayedGreedy.js files/uuid-new.csv` 
 
 
-### GreedyMin-ensemble  
+### delayedGreedy-ensemble  
 Executes multiple runs of greedyMin  
-`node greedyMin-ensemble.js <numbers of runs to execute> <path to csv>`  
+`node delayedGreedy-ensemble.js <numbers of runs to execute> <path to csv>`  
