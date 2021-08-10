@@ -241,14 +241,31 @@ function isNonEmpty(testToMutant) {
 function takeGreedyStep(testToMutant){
 
     var max_idx = 0
+    var max_indices = []
     for(var i = 0; i < testToMutant.length; i++){
 
         if(testToMutant[i].length > testToMutant[max_idx].length){
             max_idx = i
         }
+
     }
-    if(testToMutant[max_idx].length === 0){
+    max_indices.push(max_idx)
+    for (var i = 0; i < testToMutant.length; i++){
+        if(testToMutant[i].length === max_idx){
+            max_indices.push(i)
+        }
+    }
+
+
+    if( testToMutant[max_idx].length === 0){
         return
+    }
+
+    if(max_indices.length > 1){
+        var random_idx = Math.floor(Math.random() * max_indices.length)
+        max_idx = max_indices[random_idx]
+
+
     }
 
     var mutants = testToMutant[max_idx]
@@ -340,8 +357,8 @@ console.log(`${chalk.bgMagenta("Mutation Score for originalSet= ",mutationScore,
 console.log(`${chalk.bgMagenta("Mutation Score for reducedSet= ", opMutationScore," %")}`)
 console.log(`${chalk.bgMagenta("Reduced set :")}    ${optimizedSuite}`)
 
-console.log(`${chalk.bgMagenta("Reduced set Size: ", optimizedSuite.length)}`)
-console.log(`${chalk.bgMagenta("Original set Size: ",testToMutant.length)}`)
+console.log(`${chalk.bgMagenta("Reduced set Size :")}    ${optimizedSuite.length}`)
+console.log(`${chalk.bgMagenta("Original set Size:",testToMutant.length)}`)
 
 var str = datetime+","+fileName+","+totalMutants+","+time+"ms"+","+minutes+"m "+ (seconds-minutes*60)+"s " + (time - seconds*1000)+ "ms"+","+mutationScore+","+opMutationScore+","+optimizedSuite.join(" ")+","+header.length+","+optimizedSuite.length+"\n";
 
