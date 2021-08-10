@@ -30,7 +30,14 @@ For debug Mode, the script will produce a greedyMinDebug.csv output
 For normal mode  
 `node greedyMin.js files/uuid-new.csv`  
 
+### Delayed Greedy Selection  
+Does a selection of test cases which together kill all of mutants and returns a list of test cases ordered in decreasing manner of most mutants killed by test case (a csv output delayedGreedyOutputs.csv is also produced)  
+`node delayedGreedy.js <path to csv> 
 
-### GreedyMin-ensemble  
+#### Example  
+`node delayedGreedy.js files/uuid-new.csv` 
+
+
+### delayedGreedy-ensemble  
 Executes multiple runs of greedyMin  
-`node greedyMin-ensemble.js <numbers of runs to execute> <path to csv>`  
+`node delayedGreedy-ensemble.js <numbers of runs to execute> <path to csv>`  
