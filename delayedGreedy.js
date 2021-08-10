@@ -46,6 +46,15 @@ function getMutantContext(lines){
                 }
                 
              }
+             for(var j = 2; j < outputs.length; j++){
+                if(parseInt(outputs[j]) == -1 || parseInt(outputs[j]) == -2 ){
+
+                 delete mutantToTest[outputs[0]]
+                 break
+
+                }
+                
+             }
              
         }
         return mutantToTest
@@ -261,12 +270,12 @@ function takeGreedyStep(testToMutant){
         return
     }
 
-    if(max_indices.length > 1){
-        var random_idx = Math.floor(Math.random() * max_indices.length)
-        max_idx = max_indices[random_idx]
+    //if(max_indices.length > 1){
+    //    var random_idx = Math.floor(Math.random() * max_indices.length)
+    //    max_idx = max_indices[random_idx]
 
 
-    }
+    //}
 
     var mutants = testToMutant[max_idx]
     for(var mutant of mutants){
@@ -318,7 +327,8 @@ linesReduced = linesArr.map(line => line.splice(line.length-1)); //do not uncomm
 linesReduced = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
 totalMutants = linesReduced.length
 
-
+console.log(lines.length)
+console.log(linesReduced.length)
 var mutationScore = getMutationScore(testCases, linesReduced,totalMutants)
 
 
