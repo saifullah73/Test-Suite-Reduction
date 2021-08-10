@@ -270,12 +270,12 @@ function takeGreedyStep(testToMutant){
         return
     }
 
-    //if(max_indices.length > 1){
-    //    var random_idx = Math.floor(Math.random() * max_indices.length)
-    //    max_idx = max_indices[random_idx]
+    if(max_indices.length > 1){
+        var random_idx = Math.floor(Math.random() * max_indices.length)
+        max_idx = max_indices[random_idx]
 
 
-    //}
+    }
 
     var mutants = testToMutant[max_idx]
     for(var mutant of mutants){
