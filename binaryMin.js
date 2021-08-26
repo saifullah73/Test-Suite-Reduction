@@ -24,8 +24,15 @@ var CSVProcessor = (function(path){
     let linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
 
     lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
+	for(var i = 0; i < lines.length;i++){
+		var last = lines[i][lines[i].length - 1]
+		last = last.split('\r')[0]
+		lines[i][lines[i].length-1] = last
+	}
+
     totalmutants = lines.length;
 
+	
 	// console.log(`${chalk.bgGreen("totalmutants = "+totalmutants)}`);
 	// console.log(`${chalk.bgGreen("Header = "+header)}`);
 	// console.log(lines);

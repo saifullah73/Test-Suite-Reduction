@@ -323,11 +323,15 @@ var testCases = getTestCases(lines[0])
 
 
 var header = lines.slice(0,1)[0].split('|').splice(2);
+
 var linesExceptFirst = lines.slice(1,lines.length-1); //uptil the last item(exclusive) since it is empty string
 var linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
+
+
 linesReduced = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
 linesReduced = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
 totalMutants = linesReduced.length
+
 
 
 var mutationScore = getMutationScore(testCases, linesReduced,totalMutants)
