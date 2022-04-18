@@ -24,10 +24,19 @@ var CSVProcessor = (function(path){
     let linesExceptFirst = templines.slice(1,templines.length-1); //uptil the last item(exclusive) since it is empty string
 
     let linesArr = linesExceptFirst.map(line=>line.split('|').splice(2));
+	
     
-    lines = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
+    //lines = linesArr.map(line => line.splice(line.length-1)); //do not uncomment
+	
 
     lines = linesArr.filter(line=>line.indexOf('-1') === -1 && line.indexOf('-2') === -1)
+
+	for(var i = 0; i < lines.length;i++){
+		var last = lines[i][lines[i].length - 1]
+		last = last.split('\r')[0]
+		lines[i][lines[i].length-1] = last
+	}
+
     
     
     totalmutants = lines.length;

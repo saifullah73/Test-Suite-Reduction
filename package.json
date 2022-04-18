@@ -1,0 +1,28 @@
+{
+  "name": "test-suite-reduction",
+  "version": "1.0.0",
+  "description": "A set of javascript tools to reduce test suite size via delta debugging,linear search, and binary search designed to run on mutode2 csv ouput files. Feature selection is also used to select most correlated test cases with respect to mutation score (tools/correlations.py)  \r ## Usage\r The tools works on the csv outputs of [mutode2](https://github.com/saifullah73/mutode2)\r ### Linear Search Algorithm\r `node linMin.js <path to csv> <tolerance>`",
+  "main": "binaryMin.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatimacodes2001/Test-Suite-Reduction.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fatimacodes2001/Test-Suite-Reduction/issues"
+  },
+  "homepage": "https://github.com/fatimacodes2001/Test-Suite-Reduction#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "child_process": "^1.0.2",
+    "fs": "0.0.1-security",
+    "mocha": "^9.0.3"
+  }
+}
